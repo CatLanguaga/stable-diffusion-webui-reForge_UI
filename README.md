@@ -1,5 +1,18 @@
 # Stable Diffusion WebUI Forge/reForge
 
+> ## Studio UI (este fork)
+>
+> Fork de [Panchovix/stable-diffusion-webui-reForge](https://github.com/Panchovix/stable-diffusion-webui-reForge) con una UI propia, limpia, estilo PixAI: **Studio**.
+>
+> - **Código:** extensión en `extensions/sd-studio/` (backend `scripts/studio.py`, frontend `static/`). Se sirve en `http://127.0.0.1:7860/studio/`.
+> - **Arranque:** ejecutar `studio.bat` (lanza reForge con `--api --medvram-sdxl` y abre Studio cuando el server responde). Alternativa: `webui-user.bat` (ya incluye `--api`) y abrir `/studio/` a mano.
+> - **Requisito:** el flag `--api` es obligatorio; Studio usa `/sdapi/v1/*`.
+> - **Parches al core incluidos:**
+>   - `modules/images.py`: `piexif.load` atrapa cualquier excepción (EXIF corrupto daba `struct.error`).
+>   - `modules/stealth_infotext.py`: corta el escaneo si no hay firma RGB ni canal alfa (evitaba un cuelgue de `/sdapi/v1/png-info` con el GIL tomado).
+>
+> **Nota:** `presets.json` (configs guardadas) y `lora_names.json` (nombres visibles de LoRAs) **no se suben** al repo porque son datos personales; están en `extensions/sd-studio/.gitignore`. Studio arranca sin ellos y los crea solo al guardar la primera config o renombrar un LoRA. Tampoco se suben modelos, LoRAs, VAEs, `venv/` ni `outputs/`.
+
 Stable Diffusion WebUI Forge/reForge is a platform on top of [Stable Diffusion WebUI](https://github.com/AUTOMATIC1111/stable-diffusion-webui) (based on [Gradio](https://www.gradio.app/)) to make development easier, optimize resource management, speed up inference, and study experimental features.
 
 The name "Forge" is inspired from "Minecraft Forge". This project is aimed at becoming SD WebUI's Forge.

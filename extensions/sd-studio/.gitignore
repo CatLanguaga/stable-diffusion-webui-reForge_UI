@@ -1,0 +1,7 @@
+presets.json
+lora_names.json
+*.tmp
+server.log
+relaunch_job.json
+*.bak
+__pycache__/

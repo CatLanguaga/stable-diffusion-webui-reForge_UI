@@ -824,8 +824,10 @@ def read_info_from_image(image: Image.Image) -> tuple[str | None, dict]:
             exif_data = items["exif"]
             try:
                 exif = piexif.load(exif_data)
-            except OSError:
-                # memory / exif was not valid so piexif tried to read from a file
+            except Exception:
+                # OSError: exif bytes invalid so piexif tried to read them as a file path.
+                # struct.error / ValueError: truncated or corrupt EXIF (common in phone/web JPEGs).
+                # Either way there is no usable EXIF; keep reading the other metadata.
                 exif = None
             exif_comment = (exif or {}).get("Exif", {}).get(piexif.ExifIFD.UserComment, b'')
             try:

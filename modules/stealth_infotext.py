@@ -111,6 +111,14 @@ def read_info_from_image_stealth(image):
                             compressed = True
                         buffer_rgb = ''
                         index_rgb = 0
+                    elif not has_alpha:
+                        # No RGB signature and no alpha channel to check later -> there is no stealth
+                        # info. Without this break the loop scanned the whole image in pure Python
+                        # (minutes on SDXL sizes) while holding the GIL, freezing every other request,
+                        # including running generations. RGBA images keep going: their alpha
+                        # signature is only complete at pixel 120, after this RGB check (pixel 40).
+                        read_end = True
+                        break
             elif reading_param_len:
                 if mode == 'alpha':
                     if index_a == 32:
